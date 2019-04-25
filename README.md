@@ -5,4 +5,4 @@ most classic ways to use it.
 
 # List of Examples
 
-* ToDo List
+* To Do List
