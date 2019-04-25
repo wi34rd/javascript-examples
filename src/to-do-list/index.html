@@ -16,23 +16,25 @@
     <p>
         <label>
             <span>Task Filter</span><br>
-            <input type="text" name="filter" id="filter">
+            <input type="text" name="task-filter" id="task-filter">
         </label>
     </p>
 
     <div>
-        Task list is empty.
+        <span id="task-list-empty-warning">Task list is empty.</span>
+
+        <ul id="task-list"></ul>
     </div>
 
     <p>
-        <button type="button">Clear Tasks</button>
+        <button type="button" id="clear-tasks">Clear Tasks</button>
     </p>
 
-    <form>
+    <form id="new-task-form">
         <p>
             <label>
                 <span>New Task</span><br>
-                <input type="text" name="task" id="task">
+                <input type="text" name="new-task">
             </label>
         </p>
 
