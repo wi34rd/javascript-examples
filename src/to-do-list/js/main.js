@@ -17,7 +17,11 @@ newTaskForm.addEventListener('submit', function (event) {
     }
 
     const task = document.createElement('li');
-    task.appendChild(document.createTextNode(newTask.value));
+    task.appendChild(document.createTextNode(newTask.value + ' '));
+    const removeLink = document.createElement('a');
+    removeLink.innerHTML = '[&#215;]';
+    removeLink.setAttribute('href', 'javascript: void 0');
+    task.appendChild(removeLink);
     taskList.appendChild(task);
 
     newTask.value = '';
