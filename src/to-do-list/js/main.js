@@ -45,7 +45,7 @@
         event.preventDefault();
     });
 
-    clearTasks.addEventListener('click', function (event) {
+    clearTasks.addEventListener('click', function () {
         // taskList.innerHTML = '';
 
         while (taskList.firstChild) {
@@ -53,5 +53,17 @@
         }
 
         taskListEmptyWarning.style.display = '';
+    });
+
+    taskFilter.addEventListener('keyup', function (event) {
+        const filterText = event.target.value.toLowerCase();
+
+        Array.prototype.forEach.call(taskList.children, function (task) {
+            if (task.innerText.includes(filterText)) {
+                task.style.display = '';
+            } else {
+                task.style.display = 'none';
+            }
+        });
     });
 })();
