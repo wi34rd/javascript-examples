@@ -34,7 +34,9 @@ newTaskForm.addEventListener('submit', function (event) {
 
 taskList.addEventListener('click', function (event) {
     if (event.target.classList.contains('task-list__remove-link')) {
-        this.removeChild(event.target.parentNode);
+        if (confirm('Are you sure?')) {
+            event.target.parentNode.remove();
+        }
     }
 
     if (taskList.childNodes.length == 0) {
