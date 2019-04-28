@@ -1,3 +1,24 @@
+function createTask(taskText) {
+    const taskElement = document.createElement('li');
+    taskElement.appendChild(document.createTextNode(taskText + ' '));
+
+    const removeLink = document.createElement('a');
+    removeLink.appendChild(document.createTextNode('[×]'));
+    removeLink.setAttribute('href', '#');
+    removeLink.classList.add('task-list__remove-link');
+    taskElement.appendChild(removeLink);
+
+    return taskElement;
+}
+
+function storeTaskInLocalStorage(taskText) {
+    let tasks = localStorage.getItem('tasks');
+    tasks = tasks === null ? [] : JSON.parse(tasks);
+    tasks.push(taskText);
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
 ;(function () {
     const taskFilter = document.getElementById('task-filter');
     const taskListEmptyWarning = document.getElementById('task-list-empty-warning');
@@ -15,16 +36,9 @@
             taskListEmptyWarning.style.display = 'none';
         }
 
-        const task = document.createElement('li');
-        task.appendChild(document.createTextNode(newTask.value + ' '));
+        taskList.appendChild(createTask(newTask.value));
 
-        const removeLink = document.createElement('a');
-        removeLink.appendChild(document.createTextNode('[×]'));
-        removeLink.setAttribute('href', '#');
-        removeLink.classList.add('task-list__remove-link');
-        task.appendChild(removeLink);
-
-        taskList.appendChild(task);
+        storeTaskInLocalStorage(newTask.value);
 
         newTask.value = '';
 
@@ -34,7 +48,13 @@
     taskList.addEventListener('click', function (event) {
         if (event.target.classList.contains('task-list__remove-link')) {
             if (confirm('Are you sure?')) {
+                const taskIndex = Array.prototype.indexOf.call(taskList.children, event.target.parentNode);
+
                 event.target.parentNode.remove();
+
+                const tasks = JSON.parse(localStorage.getItem('tasks'));
+                tasks.splice(taskIndex, 1);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
             }
         }
 
@@ -52,6 +72,8 @@
             taskList.firstChild.remove();
         }
 
+        localStorage.removeItem('tasks');
+
         taskListEmptyWarning.style.display = '';
     });
 
@@ -66,4 +88,12 @@
             }
         });
     });
+
+    const tasks = localStorage.getItem('tasks');
+
+    if (tasks !== null) {
+        JSON.parse(tasks).forEach((taskText) => {
+            taskList.appendChild(createTask(taskText));
+        });
+    }
 })();
