@@ -18,13 +18,28 @@ newTaskForm.addEventListener('submit', function (event) {
 
     const task = document.createElement('li');
     task.appendChild(document.createTextNode(newTask.value + ' '));
+
     const removeLink = document.createElement('a');
-    removeLink.innerHTML = '[&#215;]';
-    removeLink.setAttribute('href', 'javascript: void 0');
+    removeLink.appendChild(document.createTextNode('[×]'));
+    removeLink.setAttribute('href', '#');
+    removeLink.classList.add('task-list__remove-link');
     task.appendChild(removeLink);
+
     taskList.appendChild(task);
 
     newTask.value = '';
+
+    event.preventDefault();
+});
+
+taskList.addEventListener('click', function (event) {
+    if (event.target.classList.contains('task-list__remove-link')) {
+        this.removeChild(event.target.parentNode);
+    }
+
+    if (taskList.childNodes.length == 0) {
+        taskListEmptyWarning.style.display = '';
+    }
 
     event.preventDefault();
 });
