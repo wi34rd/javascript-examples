@@ -1,5 +1,7 @@
 class LoanCalculator {
     constructor() {
+        this._cardBlock = document.querySelector('.card');
+        this._cardHeadingBlock = this._cardBlock.querySelector('.heading');
         this._interestInput = document.getElementById('interest-input');
         this._amountInput = document.getElementById('amount-input');
         this._yearsInput = document.getElementById('years-input');
@@ -25,8 +27,18 @@ class LoanCalculator {
             this._totalPaymentInput.value = (monthlyPayment * calculatedPayments).toFixed(2);
             this._totalInterestInput.value = ((monthlyPayment * calculatedPayments) - principal).toFixed(2);
         } else {
-            console.error('Пожалуйста проверьте введенные вами данные.');
+            this.showError('Пожалуйста проверьте введенные вами данные.');
         }
+    }
+
+    showError(errorText) {
+        const errorBlock = document.createElement('div');
+        errorBlock.className = 'alert alert-danger';
+        errorBlock.appendChild(document.createTextNode(errorText));
+        this._cardBlock.insertBefore(errorBlock, this._cardHeadingBlock);
+        setTimeout(() => {
+            this._cardBlock.querySelector('.alert').remove();
+        }, 3000);
     }
 }
 
