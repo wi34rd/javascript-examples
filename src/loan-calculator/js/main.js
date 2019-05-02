@@ -1,5 +1,5 @@
 class LoanCalculator {
-    card = document.getElementById('card');
+    cardBlock = document.getElementById('card');
     loanForm = document.getElementById('loan-form');
     interestInput = document.getElementById('interest-input');
     amountInput = document.getElementById('amount-input');
@@ -7,37 +7,51 @@ class LoanCalculator {
     monthlyPaymentInput = document.getElementById('monthly-payment-input');
     totalPaymentInput = document.getElementById('total-payment-input');
     totalInterestInput = document.getElementById('total-interest-input');
+    loadingBlock = document.getElementById('loading');
+    resultsBlock = document.getElementById('results');
+    errorBlock = document.createElement('div');
 
     constructor() {
+        this.errorBlock.className = 'alert alert-danger';
+
         this.loanForm.addEventListener('submit', (event) => this.onLoanFormSubmit(event));
     }
 
     onLoanFormSubmit(event) {
         event.preventDefault();
 
-        const principal = parseFloat(this.amountInput.value);
-        const calculatedInterest = parseFloat(this.interestInput.value) / 100 / 12;
-        const calculatedPayments = parseFloat(this.yearsInput.value) * 12;
-        const x = Math.pow(1 + calculatedInterest, calculatedPayments);
-        const monthlyPayment = (principal * x * calculatedInterest) / (x - 1);
+        this.loadingBlock.style.display = 'block';
+        this.resultsBlock.style.display = 'none';
+        setTimeout(() => {
+            const principal = parseFloat(this.amountInput.value);
+            const calculatedInterest = parseFloat(this.interestInput.value) / 100 / 12;
+            const calculatedPayments = parseFloat(this.yearsInput.value) * 12;
+            const x = Math.pow(1 + calculatedInterest, calculatedPayments);
+            const monthlyPayment = (principal * x * calculatedInterest) / (x - 1);
 
-        if (isFinite(monthlyPayment)) {
-            this.monthlyPaymentInput.value = monthlyPayment.toFixed(2);
-            this.totalPaymentInput.value = (monthlyPayment * calculatedPayments).toFixed(2);
-            this.totalInterestInput.value = ((monthlyPayment * calculatedPayments) - principal).toFixed(2);
-        } else {
-            this.showError('Пожалуйста проверьте введенные вами данные.');
-        }
+            if (isFinite(monthlyPayment)) {
+                this.monthlyPaymentInput.value = monthlyPayment.toFixed(2);
+                this.totalPaymentInput.value = (monthlyPayment * calculatedPayments).toFixed(2);
+                this.totalInterestInput.value = ((monthlyPayment * calculatedPayments) - principal).toFixed(2);
+                this.resultsBlock.style.display = 'block';
+            } else {
+                this.showError('Пожалуйста проверьте введенные вами данные.');
+            }
+
+            this.loadingBlock.style.display = 'none';
+        }, 2000);
     }
 
     showError(errorText) {
-        const errorMessage = document.createElement('div');
+        if (this.errorBlock.childNodes.length > 0) {
+            return;
+        }
 
-        errorMessage.className = 'alert alert-danger';
-        errorMessage.appendChild(document.createTextNode(errorText));
-        this.card.insertBefore(errorMessage, this.loanForm);
+        this.errorBlock.appendChild(document.createTextNode(errorText));
+        this.cardBlock.insertBefore(this.errorBlock, this.loanForm);
         setTimeout(() => {
-            errorMessage.remove();
+            this.errorBlock.childNodes[0].remove();
+            this.errorBlock.remove();
         }, 3000);
     }
 }
