@@ -13,11 +13,12 @@ class LoanCalculator {
 
     constructor() {
         this.errorBlock.className = 'alert alert-danger';
+        this.errorBlock.isShown = false;
 
-        this.loanForm.addEventListener('submit', (event) => this.onLoanFormSubmit(event));
+        this.loanForm.addEventListener('submit', (event) => this.loanFormSubmitHandler(event));
     }
 
-    onLoanFormSubmit(event) {
+    loanFormSubmitHandler(event) {
         event.preventDefault();
 
         this.loadingBlock.style.display = 'block';
@@ -43,15 +44,18 @@ class LoanCalculator {
     }
 
     showError(errorText) {
-        if (this.errorBlock.childNodes.length > 0) {
+        if (this.errorBlock.isShown) {
             return;
         }
 
         this.errorBlock.appendChild(document.createTextNode(errorText));
         this.cardBlock.insertBefore(this.errorBlock, this.loanForm);
+        this.errorBlock.isShown = true;
+
         setTimeout(() => {
-            this.errorBlock.childNodes[0].remove();
             this.errorBlock.remove();
+            this.errorBlock.childNodes[0].remove();
+            this.errorBlock.isShown = false;
         }, 3000);
     }
 }
